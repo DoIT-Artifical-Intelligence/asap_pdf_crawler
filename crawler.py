@@ -113,8 +113,22 @@ def get_url(url, timeout=90, use_webdriver=False):
 def parse_robots_txt(url, manual_crawl_delay):
     # Parse the site's robots.txt file
     rp = urllib.robotparser.RobotFileParser()
-    rp.set_url(urllib.parse.urljoin(url, "robots.txt"))
-    rp.read()
+    
+    # We use 'requests' to fetch the file, as it's much better
+    # at handling different encodings than the default urllib.
+    robots_url = urllib.parse.urljoin(url, "robots.txt")
+    try:
+        r = requests.get(robots_url, timeout=10)
+        r.raise_for_status()  # Check for errors (like 404)
+        
+        # 'r.text' automatically decodes the content.
+        # We pass the decoded lines to rp.parse()
+        rp.parse(r.text.splitlines())
+        
+    except requests.exceptions.RequestException as e:
+        # If robots.txt doesn't exist or we can't read it, just log
+        # and continue with an empty parser.
+        tqdm.write(f"Could not read {robots_url}: {e}")
 
     # TODO: For the sites above, there is only one. Make more flexible
     sitemap = urllib.parse.urljoin(url, "sitemap.xml")  # Default
