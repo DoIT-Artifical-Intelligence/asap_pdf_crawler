@@ -18,7 +18,7 @@ uv run https://raw.githubusercontent.com/DoIT-Artifical-Intelligence/asap_pdf_cr
     --depth 1
 """
 # Display the csv using
-"""
+r"""
 Import-Csv .\output.csv | Format-Table
 """
 # Linux/MacOS Example:
