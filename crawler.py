@@ -12,15 +12,19 @@
 # ///
 # Powershell Example:
 """
-uv run https://raw.githubusercontent.com/raybellwaves/asap_pdf/refs/heads/uv-inline-deps/python_components/crawler/crawler.py `
-    https://www.whitman.edu/academics/departments-and-programs/mathematics `
+uv run https://raw.githubusercontent.com/DoIT-Artifical-Intelligence/asap_pdf_crawler/refs/heads/main/crawler.py `
+    URL_OF_DOMAIN or URL_OF_PDF `
     output.csv `
     --depth 1
 """
+# Display the csv using
+"""
+Import-Csv .\output.csv | Format-Table
+"""
 # Linux/MacOS Example:
 """
-uv run https://raw.githubusercontent.com/raybellwaves/asap_pdf/refs/heads/uv-inline-deps/python_components/crawler/crawler.py \
-    https://www.whitman.edu/academics/departments-and-programs/mathematics \
+uv run https://raw.githubusercontent.com/DoIT-Artifical-Intelligence/asap_pdf_crawler/refs/heads/main/crawler.py \
+    URL_OF_DOMAIN or URL_OF_PDF \
     output.csv \
     --depth 1
 """
