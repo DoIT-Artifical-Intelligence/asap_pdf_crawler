@@ -52,6 +52,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from tqdm import tqdm
 
+import urllib3  # --- NEW ---
+
+# Some gov websites, have unusual certificate handling.
+# To enforce SSL verification, comment out or remove this line.
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  # --- NEW ---
+
 
 def get_url(url, timeout=90, use_webdriver=False):
     if use_webdriver:
@@ -94,7 +100,8 @@ def get_url(url, timeout=90, use_webdriver=False):
 
         return atags
     else:
-        response = requests.get(url, timeout=timeout)
+        # --- MODIFIED LINE ---
+        response = requests.get(url, timeout=timeout, verify=False)
         if response.status_code >= 400:
             return None
 
@@ -120,7 +127,8 @@ def parse_robots_txt(url, manual_crawl_delay):
 
 
 def parse_sitemap(sitemap, manual_crawl_delay):
-    r = requests.get(sitemap)
+    # --- MODIFIED LINE ---
+    r = requests.get(sitemap, verify=False)
     soup = BeautifulSoup(r.text, "xml")
     more_site_maps = [site.text for site in soup.find_all("loc")]
 
@@ -129,7 +137,8 @@ def parse_sitemap(sitemap, manual_crawl_delay):
         if manual_crawl_delay:
             time.sleep(manual_crawl_delay)
 
-        r = requests.get(site)
+        # --- MODIFIED LINE ---
+        r = requests.get(site, verify=False)
         soup = BeautifulSoup(r.text, "xml")
         all_pages.update([x.find("loc").text for x in soup.find_all("url")])
 
@@ -312,8 +321,13 @@ def get_pdf_metadata(pdfs, output_path):
                     "Content-Type": "application/pdf",
                     "Content-Disposition": "inline",
                 }
+                # --- MODIFIED BLOCK ---
                 response = requests.get(
-                    url=pdf_url, timeout=90, headers=headers, allow_redirects=True
+                    url=pdf_url,
+                    timeout=90,
+                    headers=headers,
+                    allow_redirects=True,
+                    verify=False,
                 )
                 if response.status_code < 400:
                     with io.BytesIO(response.content) as mem_obj:
