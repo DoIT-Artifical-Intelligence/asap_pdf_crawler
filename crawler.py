@@ -19,7 +19,7 @@ uv run https://raw.githubusercontent.com/DoIT-Artifical-Intelligence/asap_pdf_cr
 """
 # Display the csv using
 r"""
-Import-Csv .\output.csv | Format-Table
+Import-Csv .\output.csv | Format-List
 """
 # Linux/MacOS Example:
 """
